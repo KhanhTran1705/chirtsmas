@@ -157,7 +157,7 @@ function createGift() {
 
   const messages = [
     '🎄 Giáng sinh an lành',
-    '⭐ Chúc gia đình bạn một mùa lễ an vui và nhiều hạnh phúc',
+    '⭐ Chúc gia đình một mùa lễ an vui và nhiều hạnh phúc',
   ];
 
   gift.addEventListener('click', () => {
