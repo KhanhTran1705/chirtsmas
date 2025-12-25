@@ -56,14 +56,17 @@
       <span id="days">00</span> ngày <span id="hours">00</span> giờ
       <span id="minutes">00</span> phút <span id="seconds">00</span> giây
     </div>
-    <audio id="bgMusic" loop>
+    <audio id="bgMusic" loop autoplay muted playsinline>
       <source
         src="https://storage.googleapis.com/webai-54992.appspot.com/WeWishYouAMerryChristmas.mp3"
         type="audio/mp3"
       />
     </audio>
     <button class="music-toggle">🔊</button>
-    <a
+    <div id="autoplay-overlay" class="autoplay-overlay">
+      <button id="autoplay-btn" class="autoplay-btn">Nhấn để bật nhạc</button>
+    </div>
+    <!-- <a
       href="https://www.tiktok.com/@ntrong_toan?lang=vi"
       target="_blank"
       class="tiktok-logo"
@@ -72,7 +75,7 @@
         src="https://firebasestorage.googleapis.com/v0/b/webai-54992.appspot.com/o/logo-tiktok.png?alt=media&token=4473a42a-e492-4a4d-8821-ed9348ac2339"
         alt="Create By"
       />
-    </a>
+    </a> -->
     <div class="fireworks-container"></div>
     <script type="module" src="script.js"></script>
   </body>

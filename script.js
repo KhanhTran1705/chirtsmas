@@ -72,15 +72,62 @@ setInterval(createSnow, 200);
 const musicBtn = document.querySelector('.music-toggle');
 const audio = document.getElementById('bgMusic');
 
-musicBtn.addEventListener('click', () => {
-  if (audio.paused) {
-    audio.play();
+function updateMusicButton() {
+  if (!audio.paused && !audio.muted) {
     musicBtn.textContent = '🔊';
+  } else if (!audio.paused && audio.muted) {
+    musicBtn.textContent = '🔈';
   } else {
-    audio.pause();
     musicBtn.textContent = '🔈';
   }
+}
+
+musicBtn.addEventListener('click', async () => {
+  try {
+    if (audio.paused) {
+      await audio.play();
+      audio.muted = false;
+      updateMusicButton();
+    } else if (audio.muted) {
+      audio.muted = false;
+      updateMusicButton();
+    } else {
+      audio.pause();
+      updateMusicButton();
+    }
+  } catch (e) {
+    // If autoplay was blocked, this user click is a valid gesture: try again
+    audio.muted = false;
+    audio.play().catch(() => {});
+    updateMusicButton();
+  }
 });
+
+async function tryAutoplay() {
+  try {
+    await audio.play();
+  } catch (e) {
+    // Autoplay blocked: keep audio muted and wait for user interaction
+  } finally {
+    updateMusicButton();
+  }
+}
+
+// Overlay button to get a user gesture so we can unmute and play with sound
+const autoplayOverlay = document.getElementById('autoplay-overlay');
+const autoplayBtn = document.getElementById('autoplay-btn');
+if (autoplayBtn) {
+  autoplayBtn.addEventListener('click', async () => {
+    try {
+      audio.muted = false;
+      await audio.play();
+    } catch (e) {
+      // ignore
+    }
+    updateMusicButton();
+    if (autoplayOverlay) autoplayOverlay.style.display = 'none';
+  });
+}
 
 // Thêm hiệu ứng di chuyển cho ông già Noel
 function moveSanta() {
@@ -109,10 +156,8 @@ function createGift() {
   gift.style.top = '-50px';
 
   const messages = [
-    '🎁 Chúc mừng! Bạn nhận được một điều ước',
-    '🎄 Giáng sinh an lành!',
-    '⭐ Năm mới hạnh phúc!',
-    '🎅 Ho Ho Ho! Quà từ ông già Noel',
+    '🎄 Giáng sinh an lành',
+    '⭐ Chúc gia đình bạn một mùa lễ an vui và nhiều hạnh phúc',
   ];
 
   gift.addEventListener('click', () => {
@@ -374,6 +419,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Các hiệu ứng khác vẫn giữ nguyên
   animateClouds();
   addTreeInteraction();
+  // Thử phát nhạc tự động (nếu trình duyệt cho phép)
+  tryAutoplay();
 
   document.addEventListener('click', (e) => {
     createFirework(e.pageX, e.pageY);
